@@ -47,6 +47,7 @@ describe("4. GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
+        // expect(articles).toHaveProperty("article_id");
         expect(articles).toHaveProperty("title");
         expect(articles).toHaveProperty("topic");
         expect(articles).toHaveProperty("author");
@@ -60,7 +61,7 @@ describe("4. GET /api/articles/:article_id", () => {
 describe("handles an invalid path", () => {
   test("responds with 400", () => {
     return request(app)
-      .get("/api/articles/4621749")
+      .get("/api/articles/dog")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid path");
