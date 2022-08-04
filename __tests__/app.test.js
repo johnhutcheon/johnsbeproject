@@ -119,7 +119,6 @@ describe("5. PATCH /api/articles/article_id:", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid Request");
-<<<<<<< HEAD
       });
   });
 
@@ -146,8 +145,25 @@ describe("6. GET /api/users", () => {
         expect(users[0]).toHaveProperty("username");
         expect(users[1]).toHaveProperty("name");
         expect(users[2]).toHaveProperty("avatar_url");
-=======
->>>>>>> main
+      });
+  });
+});
+
+describe("7. GET /api/articles/:article_id (comment count)", () => {
+  test("status:200, responds with comment count added to articles", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        const { articles } = body;
+        expect(articles).toHaveProperty("title");
+        expect(articles).toHaveProperty("topic");
+        expect(articles).toHaveProperty("author");
+        expect(articles).toHaveProperty("body");
+        expect(articles).toHaveProperty("created_at");
+        expect(articles).toHaveProperty("votes");
+        expect(articles).toHaveProperty("comment_count");
       });
   });
 });
