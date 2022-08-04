@@ -8,7 +8,7 @@ beforeEach(() => {
   return seed(data);
 });
 
-describe("1. GET /api/topics", () => {
+describe("3. GET /api/topics", () => {
   test("status:200, responds with an array of topics", () => {
     return request(app)
       .get("/api/topics")
@@ -119,6 +119,35 @@ describe("5. PATCH /api/articles/article_id:", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid Request");
+<<<<<<< HEAD
+      });
+  });
+
+  test("returns an error when inc_votes is spelt incorrectly", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ ink_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Request");
+      });
+  });
+});
+
+describe("6. GET /api/users", () => {
+  test("status:200, responds with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        console.log(users);
+        expect(users).toBeInstanceOf(Array);
+        expect(users[0]).toHaveProperty("username");
+        expect(users[1]).toHaveProperty("name");
+        expect(users[2]).toHaveProperty("avatar_url");
+=======
+>>>>>>> main
       });
   });
 });
