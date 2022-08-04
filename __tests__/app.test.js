@@ -8,7 +8,7 @@ beforeEach(() => {
   return seed(data);
 });
 
-describe("1. GET /api/topics", () => {
+describe("3. GET /api/topics", () => {
   test("status:200, responds with an array of topics", () => {
     return request(app)
       .get("/api/topics")
@@ -47,7 +47,7 @@ describe("4. GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        // expect(articles).toHaveProperty("article_id");
+        expect(articles).toHaveProperty("article_id");
         expect(articles).toHaveProperty("title");
         expect(articles).toHaveProperty("topic");
         expect(articles).toHaveProperty("author");
@@ -64,7 +64,87 @@ describe("handles an invalid path", () => {
       .get("/api/articles/dog")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Invalid path");
+        expect(body.msg).toBe("Invalid Request");
+      });
+  });
+});
+
+describe("5. PATCH /api/articles/article_id:", () => {
+  test("responds with 400 when an ID is not a number", () => {
+    return request(app)
+      .patch("/api/articles/dog")
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Request");
+      });
+  });
+
+  test("responds with the vote property updated when adding 1", () => {
+    return request(app)
+      .patch("/api/articles/3")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.votes).toBe(1);
+      });
+  });
+
+  test("responds with the vote property updated when subtracting 1", () => {
+    return request(app)
+      .patch("/api/articles/3")
+      .send({ inc_votes: -1 })
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.votes).toBe(-1);
+      });
+  });
+
+  test("checks an article ID that doesn't exist and returns 404 error", () => {
+    return request(app)
+      .patch("/api/articles/20")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Page not found");
+      });
+  });
+
+  test("returns an error when non-number passed through inc_votes", () => {
+    return request(app)
+      .patch("/api/articles/20")
+      .send({ inc_votes: "dog" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Request");
+      });
+  });
+
+  test("returns an error when inc_votes is spelt incorrectly", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ ink_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Request");
+      });
+  });
+});
+
+describe("6. GET /api/users", () => {
+  test("status:200, responds with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        console.log(users);
+        expect(users).toBeInstanceOf(Array);
+        expect(users[0]).toHaveProperty("username");
+        expect(users[1]).toHaveProperty("name");
+        expect(users[2]).toHaveProperty("avatar_url");
       });
   });
 });
