@@ -5,20 +5,14 @@ const {
   getTopics,
   getArticle,
   updateVotes,
-<<<<<<< HEAD
   getUsers,
-=======
->>>>>>> main
 } = require("./controllers/newscontrollers.js");
 
 app.use(express.json());
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticle);
 app.patch("/api/articles/:article_id", updateVotes);
-<<<<<<< HEAD
 app.get("/api/users", getUsers);
-=======
->>>>>>> main
 
 app.use((err, req, res, next) => {
   console.log(err);
