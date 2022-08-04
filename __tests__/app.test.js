@@ -119,6 +119,7 @@ describe("5. PATCH /api/articles/article_id:", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid Request");
+<<<<<<< HEAD
       });
   });
 
@@ -145,6 +146,8 @@ describe("6. GET /api/users", () => {
         expect(users[0]).toHaveProperty("username");
         expect(users[1]).toHaveProperty("name");
         expect(users[2]).toHaveProperty("avatar_url");
+=======
+>>>>>>> main
       });
   });
 });
