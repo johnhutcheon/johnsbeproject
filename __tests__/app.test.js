@@ -121,4 +121,14 @@ describe("5. PATCH /api/articles/article_id:", () => {
         expect(body.msg).toBe("Invalid Request");
       });
   });
+
+  test("returns an error when inc_votes spelt incorrectly", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ ink_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Request");
+      });
+  });
 });
