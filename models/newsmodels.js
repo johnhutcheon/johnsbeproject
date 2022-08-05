@@ -50,3 +50,14 @@ exports.selectArticles = () => {
     return result.rows;
   });
 };
+
+exports.selectComments = (id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE article_id = $1;`, [id])
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Page not found" });
+      }
+      return result.rows;
+    });
+};

@@ -4,14 +4,15 @@ const {
   incrementVotes,
   selectUsers,
   selectArticles,
+  selectComments,
 } = require("../models/newsmodels.js");
 
-exports.getTopics = (req, res) => {
+exports.getTopics = (req, res, next) => {
   selectTopics()
     .then((topics) => {
       res.status(200).send({ topics });
     })
-    .catch((err) => console.log(err));
+    .catch(next);
 };
 
 exports.getArticle = (req, res, next) => {
@@ -36,18 +37,27 @@ exports.updateVotes = (req, res, next) => {
     .catch(next);
 };
 
-exports.getUsers = (req, res) => {
+exports.getUsers = (req, res, next) => {
   selectUsers()
     .then((users) => {
       res.status(200).send({ users });
     })
-    .catch((err) => console.log(err));
+    .catch(next);
 };
 
-exports.fetchArticles = (req, res) => {
+exports.fetchArticles = (req, res, next) => {
   selectArticles()
     .then((articles) => {
       res.status(200).send(articles);
     })
-    .catch((err) => console.log(err));
+    .catch(next);
+};
+
+exports.getComments = (req, res, next) => {
+  const { article_id } = req.params;
+  selectComments(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
 };
