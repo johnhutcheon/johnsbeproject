@@ -18,6 +18,7 @@ describe("3. GET /api/topics", () => {
         expect(topics).toBeInstanceOf(Array);
         expect(topics).toHaveLength(3);
         topics.forEach((topic) => {
+          console.log(topic);
           expect(topic).toEqual(
             expect.objectContaining({
               description: expect.any(String),
@@ -156,6 +157,34 @@ describe("7. GET /api/articles/:article_id (comment count)", () => {
       .expect(200)
       .then(({ body }) => {
         console.log(body);
+        const { articles } = body;
+        expect(articles).toHaveProperty("title");
+        expect(articles).toHaveProperty("topic");
+        expect(articles).toHaveProperty("author");
+        expect(articles).toHaveProperty("body");
+        expect(articles).toHaveProperty("created_at");
+        expect(articles).toHaveProperty("votes");
+        expect(articles).toHaveProperty("comment_count");
+      });
+  });
+});
+
+describe("8. GET /api/articles", () => {
+  test("status:200, responds with an array of topics", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeInstanceOf(Array);
+        expect(body.length).toEqual(12);
+      });
+  });
+
+  test("responds with required properties", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then(({ body }) => {
         const { articles } = body;
         expect(articles).toHaveProperty("title");
         expect(articles).toHaveProperty("topic");
