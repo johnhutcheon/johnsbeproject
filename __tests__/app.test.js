@@ -18,7 +18,6 @@ describe("3. GET /api/topics", () => {
         expect(topics).toBeInstanceOf(Array);
         expect(topics).toHaveLength(3);
         topics.forEach((topic) => {
-          console.log(topic);
           expect(topic).toEqual(
             expect.objectContaining({
               description: expect.any(String),
@@ -141,7 +140,6 @@ describe("6. GET /api/users", () => {
       .expect(200)
       .then(({ body }) => {
         const { users } = body;
-        console.log(users);
         expect(users).toBeInstanceOf(Array);
         expect(users[0]).toHaveProperty("username");
         expect(users[1]).toHaveProperty("name");
@@ -156,7 +154,6 @@ describe("7. GET /api/articles/:article_id (comment count)", () => {
       .get("/api/articles/2")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         const { articles } = body;
         expect(articles).toHaveProperty("title");
         expect(articles).toHaveProperty("topic");
@@ -193,6 +190,51 @@ describe("8. GET /api/articles", () => {
         expect(articles).toHaveProperty("created_at");
         expect(articles).toHaveProperty("votes");
         expect(articles).toHaveProperty("comment_count");
+      });
+  });
+});
+
+describe("9. GET /api/articles/:article_id/comments", () => {
+  test("status:200, responds with comments for correct article ID", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              article_id: 3,
+            })
+          );
+        });
+      });
+  });
+
+  test("returns a 400 error when passed invalid ID", () => {
+    return request(app)
+      .get("/api/articles/cat/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid Request");
+      });
+  });
+
+  test("returns a 404 error when passed valid ID that doesn't exist", () => {
+    return request(app)
+      .get("/api/articles/404/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Page not found");
+      });
+  });
+
+  test("returns empty array when no comments attached to ID", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toEqual(0);
       });
   });
 });

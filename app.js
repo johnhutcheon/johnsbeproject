@@ -7,6 +7,7 @@ const {
   updateVotes,
   getUsers,
   fetchArticles,
+  getComments,
 } = require("./controllers/newscontrollers.js");
 
 app.use(express.json());
@@ -15,6 +16,7 @@ app.get("/api/articles/:article_id", getArticle);
 app.patch("/api/articles/:article_id", updateVotes);
 app.get("/api/users", getUsers);
 app.get("/api/articles", fetchArticles);
+app.get("/api/articles/:article_id/comments", getComments);
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {

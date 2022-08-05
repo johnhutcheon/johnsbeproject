@@ -50,3 +50,12 @@ exports.selectArticles = () => {
     return result.rows;
   });
 };
+
+exports.selectComments = (id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE article_id = $1;`, [id])
+    .then((result) => {
+      console.log(result.rows);
+      return result.rows;
+    });
+};
