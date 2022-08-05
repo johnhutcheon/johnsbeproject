@@ -55,9 +55,11 @@ exports.fetchArticles = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
   const { article_id } = req.params;
-  selectComments(article_id)
-    .then((comments) => {
+  Promise.all([selectArticleById(article_id), selectComments(article_id)])
+    .then(([article, comments]) => {
+      console.log(article, comments);
       res.status(200).send({ comments });
     })
+
     .catch(next);
 };

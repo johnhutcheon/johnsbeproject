@@ -228,4 +228,13 @@ describe("9. GET /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Page not found");
       });
   });
+
+  test("returns empty array when no comments attached to ID", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toEqual(0);
+      });
+  });
 });
