@@ -179,4 +179,20 @@ describe("8. GET /api/articles", () => {
         expect(body.length).toEqual(12);
       });
   });
+
+  test("responds with required properties", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveProperty("title");
+        expect(articles).toHaveProperty("topic");
+        expect(articles).toHaveProperty("author");
+        expect(articles).toHaveProperty("body");
+        expect(articles).toHaveProperty("created_at");
+        expect(articles).toHaveProperty("votes");
+        expect(articles).toHaveProperty("comment_count");
+      });
+  });
 });
