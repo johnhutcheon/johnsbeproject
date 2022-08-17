@@ -3,6 +3,7 @@ const app = require("../app");
 const db = require("../db/connection.js");
 const data = require("../db/data/test-data/index.js");
 const seed = require("../db/seeds/seed.js");
+require("jest-sorted");
 
 beforeEach(() => {
   return seed(data);
@@ -237,4 +238,119 @@ describe("9. GET /api/articles/:article_id/comments", () => {
         expect(body.comments.length).toEqual(0);
       });
   });
+});
+
+//////////////////////
+
+/// TICKET 10
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("status: 201, responds with an object with required properties and the posted comment", () => {
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send({
+        username: "butter_bridge",
+        body: "hi",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("author");
+        expect(body).toHaveProperty("body");
+      });
+  });
+});
+
+/// TICKET 11
+
+describe("11. GET /api/articles (queries)", () => {
+  test("sorts the response by default created_at when no sort_by defined in request ", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const articles = body;
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("sorts the response by votes ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const articles = body;
+        expect(articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("sorts the response by a articles feild and requested order ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order_by=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        const articles = body;
+        expect(articles).toBeSortedBy("title", { descending: false });
+      });
+  });
+  test("sorts the response by a articles feild, requested order and filters by requeted topic ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order_by=ASC&topic=cats")
+      .expect(200)
+      .then(({ body }) => {
+        const articles = body;
+        expect(articles).toBeSortedBy("title", { descending: false });
+        articles.forEach((article) => {
+          expect(article.topic).toEqual("cats");
+        });
+      });
+  });
+  test("returns all topics if no topics requested ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order_by=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        const articles = body;
+        expect(articles).toBeSortedBy("title", { descending: false });
+        expect(articles).toHaveLength(12);
+      });
+  });
+  test("returns error if order_by is not valid", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order_by=Aggg&topic=spaceman")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("returns error if sort_by is not valid", () => {
+    return request(app)
+      .get("/api/articles?sort_by=badger&order_by=ASC&topic=spaceman")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+//// TICKET 12
+
+describe("12. DELETE /api/comments/:comment_id", () => {
+  test("delete the given comment by comment_id", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+});
+
+test("Status 404: when passed a valid but non-existent id", () => {
+  return request(app)
+    .delete("/api/comments/163")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Comment_id not found");
+    });
+});
+test("Status 400: when passed an invalid id", () => {
+  return request(app)
+    .delete("/api/comments/notavalidid")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Invalid Request");
+    });
 });
