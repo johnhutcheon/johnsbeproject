@@ -9,6 +9,7 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+
   "GET /api/articles": {
     "description": "serves an array of all topics",
     "queries": ["author", "topic", "sort_by", "order"],
@@ -23,5 +24,100 @@
         }
       ]
     }
-  }
+  },
+
+  "GET /api/categories": {
+    "description": "serves an array of all categories",
+    "queries": [],
+    "exampleResponse": {
+      "categories": [
+        {
+          "slug": "Social deduction",
+          "description": "Players attempt to uncover each other's hidden role"
+        }
+      ]
+    }
+  },
+
+  "GET /api/reviews/:review_id": {
+    "description": "serves an array of a review when provided a review_id in place of :review_id",
+    "queries": [],
+    "exampleResponse": {
+      "reviews": [
+        {
+          "review_id": 2,
+          "title": "JengARRGGGH!",
+          "designer": "Leslie Scott",
+          "owner": "grumpy19",
+          "review_img_url": "https://images.pexels.com/photos/4009761/pexels-photo-4009761.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+          "review_body": "Fiddly fun for all the family, this game needs little explaination. Whether you're a player who chooses to play it safe, or one who lives life on the edge, eventually the removal of blocks will destabilise the tower and all your Jenga dreams come tumbling down.",
+          "category": "dexterity",
+          "created_at": 1527695953341,
+          "votes": 5,
+          "comment_count": 3
+        }
+      ]
+    }
+  },
+
+  "GET /api/users": {
+    "description": "serves an array of usernames from the users table",
+    "queries": [],
+    "exampleResponse": {
+      "Users": [
+        { "username": "mallionaire" },
+        { "username": "philippaclaire9" },
+        { "username": "bainesface" },
+        { "username": "dav3rid" }
+      ]
+    }
+  },
+
+  "GET /api/reviews": {
+    "description": "serves an array of all reviews",
+    "queries": ["category", "sort_by", "order"],
+    "exampleResponse": {
+      "reviews": [
+        {
+          "review_id": 2,
+          "title": "JengARRGGGH!",
+          "designer": "Leslie Scott",
+          "owner": "grumpy19",
+          "review_img_url": "https://images.pexels.com/photos/4009761/pexels-photo-4009761.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+          "review_body": "Few games are equiped to fill a player with such a defined sense of mild-peril, but a friendly game of Jenga will turn the mustn't-make-it-fall anxiety all the way up to 11! Fiddly fun for all the family, this game needs little explaination. Whether you're a player who chooses to play it safe, or one who lives life on the edge, eventually the removal of blocks will destabilise the tower and all your Jenga dreams come tumbling down.",
+          "category": "dexterity",
+          "created_at": "2021-01-18T00:00:00.000Z",
+          "votes": 5,
+          "comment_count": 3
+        }
+      ]
+    }
+  },
+
+  "GET /api/users/:username": {
+    "description": "Provides username, avatar_url and name of a given user",
+    "queries": [
+      "tickle122",
+      "grumpy19",
+      "happyamy2016",
+      "cooljmessy",
+      "weegembump",
+      "jessjelly"
+    ],
+    "exampleResponse": {
+      "Users": [
+        { "username": "mallionaire" },
+        { "name": "haz" },
+        {
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
+  },
+
+  "PATCH /api/reviews/:review_id": "Will provide the ability to both upvote and downvote reviews",
+
+  "POST /api/reviews/:review_id/comments": "Will provide functionality to add a comment to a review when providing review_id",
+
+  "DELETE /api/comments/:comment_id": "Will provide functionality to remove a comment from the table with a provided comment_id"
 }
